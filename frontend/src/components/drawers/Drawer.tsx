@@ -16,8 +16,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import HomeIcon from '@mui/icons-material/Home';
 import { Link } from 'react-router-dom';
 
@@ -143,11 +142,40 @@ const Drawers = ({ children }: { children: React.ReactNode }) => {
                             <ListItemText primary="Home" sx={{ opacity: open ? 1 : 0 }} />
                         </ListItemButton>
                     </ListItem>
-                    {/* Other items (Starred, Send email, Drafts, etc.) */}
+
+                    {/* Dashboard item */}
+                    <ListItem disablePadding sx={{ display: 'block' }}>
+                        <ListItemButton component={Link} to="/dashboard">
+                            <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
+                                <DashboardIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Dashboard" sx={{ opacity: open ? 1 : 0 }} />
+                        </ListItemButton>
+                    </ListItem>
+
+                    {/* Other items (placeholders) */}
+                    {/* <ListItem disablePadding sx={{ display: 'block' }}>
+                        <ListItemButton>
+                            <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
+                                <MailIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Mail" sx={{ opacity: open ? 1 : 0 }} />
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem disablePadding sx={{ display: 'block' }}>
+                        <ListItemButton>
+                            <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
+                                <StarIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Starred" sx={{ opacity: open ? 1 : 0 }} />
+                        </ListItemButton>
+                    </ListItem> */}
+                    {/* Add more items as needed */}
                 </List>
 
             </Drawer>
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+                <DrawerHeader />
                 {children}
             </Box>
         </Box>
