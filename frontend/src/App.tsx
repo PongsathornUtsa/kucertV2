@@ -5,14 +5,14 @@ import Dashboard from './pages/dashboard/Dashboard';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Drawers>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Routes>
-      </Drawers >
-    </BrowserRouter>
+      <BrowserRouter>
+        <Drawers>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Routes>
+        </Drawers >
+      </BrowserRouter>
   );
 }
 

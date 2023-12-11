@@ -1,24 +1,21 @@
 import * as React from "react";
-import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
-import Box from "@mui/material/Box";
+import { Link } from 'react-router-dom';
+
+import {
+    Box, CssBaseline, Divider, IconButton, List, ListItem, ListItemButton,
+    ListItemIcon, ListItemText, Toolbar, Typography
+} from "@mui/material";
+
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import CssBaseline from "@mui/material/CssBaseline";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
+import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import HomeIcon from '@mui/icons-material/Home';
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import HomeIcon from '@mui/icons-material/Home';
-import { Link } from 'react-router-dom';
+
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 const drawerWidth = 240;
 
@@ -60,6 +57,7 @@ const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== "open",
 })<AppBarProps>(({ theme, open }) => ({
     zIndex: theme.zIndex.drawer + 1,
+    backgroundColor: '#045e57',
     transition: theme.transitions.create(["width", "margin"], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
@@ -120,14 +118,28 @@ const Drawers = ({ children }: { children: React.ReactNode }) => {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap component="div">
-                        Mini variant drawer
+                    <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+                        NFT-Based Verification of Academic Credentials
                     </Typography>
+                    <ConnectButton />
                 </Toolbar>
             </AppBar>
             <Drawer variant="permanent" open={open}>
                 <DrawerHeader>
-                    <IconButton onClick={handleDrawerClose}>
+                    <Box sx={{display: 'flex', alignItems: 'center',  justifyContent: 'center', width: '100%' }}>
+                        <img
+                            src="/ku_logo.png"
+                            alt="Kasetsart University Logo"
+                            style={{ height: '38px', marginRight: '10px' }}
+                        />
+                        <Typography
+                            variant="h6"
+                            sx={{fontWeight: 'bold', flexGrow: 1 }}
+                        >
+                            KASETSART
+                        </Typography>
+                    </Box>
+                    <IconButton onClick={handleDrawerClose} sx={{ marginLeft: 'auto' }}>
                         {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                     </IconButton>
                 </DrawerHeader>
@@ -152,25 +164,6 @@ const Drawers = ({ children }: { children: React.ReactNode }) => {
                             <ListItemText primary="Dashboard" sx={{ opacity: open ? 1 : 0 }} />
                         </ListItemButton>
                     </ListItem>
-
-                    {/* Other items (placeholders) */}
-                    {/* <ListItem disablePadding sx={{ display: 'block' }}>
-                        <ListItemButton>
-                            <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
-                                <MailIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Mail" sx={{ opacity: open ? 1 : 0 }} />
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding sx={{ display: 'block' }}>
-                        <ListItemButton>
-                            <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
-                                <StarIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Starred" sx={{ opacity: open ? 1 : 0 }} />
-                        </ListItemButton>
-                    </ListItem> */}
-                    {/* Add more items as needed */}
                 </List>
 
             </Drawer>
