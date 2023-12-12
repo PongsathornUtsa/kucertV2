@@ -36,43 +36,41 @@ const Dashboard = () => {
   const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-
-    const name = formData.get('name') as string;
-    const universityName = formData.get('university_name') as string;
-    const studentId = formData.get('student_id') as string;
-    const issuedDate = formData.get('issued_date') as string;
-    const signer = formData.get('signer') as string;
-
-    if (image) {
-      formData.append("file", image);
+  
+    if (!image) {
+      console.error("No image selected");
+      appendOutput("Error: No image selected");
+      return;
     }
-
+  
+    const form = new FormData();
+    form.append("file", image);
+  
     try {
       const resFile = await axios.post(
         "https://api.pinata.cloud/pinning/pinFileToIPFS",
-        formData,
+        form,
         {
           headers: {
             pinata_api_key: PINATA_API_KEY,
             pinata_secret_api_key: PINATA_API_SECRET,
-            "Content-Type": "multipart/form-data",
           },
         }
       );
-
+  
       const imgHash = `https://ipfs.io/ipfs/${resFile.data.IpfsHash}`;
-
+  
       const metadata = {
-        name,
+        name: formData.get('name') as string,
         image: imgHash,
         description: {
-          universityName,
-          studentId,
-          issuedDate,
-          signer
+          universityName: formData.get('university_name') as string,
+          studentId: formData.get('student_id') as string,
+          issuedDate: formData.get('issued_date') as string,
+          signer: formData.get('signer') as string,
         }
       };
-
+  
       const resJSON = await axios.post(
         "https://api.pinata.cloud/pinning/pinJsonToIPFS",
         metadata,
@@ -83,16 +81,16 @@ const Dashboard = () => {
           },
         }
       );
-
+  
       const tokenURI = `https://ipfs.io/ipfs/${resJSON.data.IpfsHash}`;
       console.log("Token URI:", tokenURI);
-
-      // Append the tokenURI to the output array
       appendOutput("Token URI: " + tokenURI);
     } catch (error) {
       console.error("Error uploading file: ", error);
     }
   };
+  
+  
 
   const handleMint = () => {
     // Minting logic here
