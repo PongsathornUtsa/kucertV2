@@ -1,6 +1,7 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
 import { Box, Grid, TextField, Button, Paper, Typography } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import CircularProgress from '@mui/material/CircularProgress';
 import { styled } from '@mui/material/styles';
 import axios from "axios";
 
@@ -21,6 +22,7 @@ const Dashboard = () => {
   const [image, setImage] = useState<File | null>(null);
   const [tokenURI, setTokenURI] = useState('');
   const [output, setOutput] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const appendOutput = (newOutput: string) => {
     setOutput(prevOutput => [...prevOutput, newOutput]);
@@ -35,17 +37,18 @@ const Dashboard = () => {
 
   const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsLoading(true);
     const formData = new FormData(event.currentTarget);
-  
+
     if (!image) {
       console.error("No image selected");
       appendOutput("Error: No image selected");
       return;
     }
-  
+
     const form = new FormData();
     form.append("file", image);
-  
+
     try {
       const resFile = await axios.post(
         "https://api.pinata.cloud/pinning/pinFileToIPFS",
@@ -57,9 +60,9 @@ const Dashboard = () => {
           },
         }
       );
-  
+
       const imgHash = `https://ipfs.io/ipfs/${resFile.data.IpfsHash}`;
-  
+
       const metadata = {
         name: formData.get('name') as string,
         image: imgHash,
@@ -70,7 +73,7 @@ const Dashboard = () => {
           signer: formData.get('signer') as string,
         }
       };
-  
+
       const resJSON = await axios.post(
         "https://api.pinata.cloud/pinning/pinJsonToIPFS",
         metadata,
@@ -81,16 +84,18 @@ const Dashboard = () => {
           },
         }
       );
-  
+
       const tokenURI = `https://ipfs.io/ipfs/${resJSON.data.IpfsHash}`;
       console.log("Token URI:", tokenURI);
       appendOutput("Token URI: " + tokenURI);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error uploading file: ", error);
+      setIsLoading(false);
     }
   };
-  
-  
+
+
 
   const handleMint = () => {
     // Minting logic here
@@ -123,7 +128,9 @@ const Dashboard = () => {
                 </label>
               </Box>
               <Box sx={{ flex: '1' }}>
-                <Button fullWidth variant="contained" type="submit">Submit</Button>
+                <Button fullWidth variant="contained" type="submit" disabled={isLoading}>
+                  {isLoading ? <CircularProgress size={24} /> : "Submit"}
+                </Button>
               </Box>
             </Box>
           </Box>
@@ -136,14 +143,14 @@ const Dashboard = () => {
       </Grid>
 
       {/* NFT Mint Demo Section */}
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={8}>
         <Paper
           sx={{
-            height: '100%',
+            height: '80%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            m: 0,
+            mb: 2,
             p: 2, // Added comma here
             backgroundColor: '#7A70FF',
             backgroundImage: 'linear-gradient(-370deg, #3898FF, #7A70FF)',
@@ -153,21 +160,30 @@ const Dashboard = () => {
             NFT Mint Demo
           </Typography>
         </Paper>
-      </Grid>
-
-      <Grid item xs={12} md={2}>
         <Paper
-          sx={{ height: '100%', display: 'flex', m: 0, p: 2, }}>
+          sx={{
+            height: '20%',
+            display: 'flex',
+            flexDirection: 'column',
+            m: 0,
+            p: 2,
+            backgroundColor: 'black',
+            color: 'limegreen',
+            fontFamily: 'monospace',
+            overflow: 'auto',
+          }}
+        >
           <Typography variant="h6" sx={{ fontWeight: 'bold', paddingBottom: '10pt' }}>Terminal</Typography>
-          <Box sx={{ overflow: 'auto', flexGrow: 1 }}>
+          <Box sx={{ flexGrow: 1, p: 2 }}>
             {output.map((line, index) => (
-              <Typography key={index} sx={{ fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}>
+              <Typography key={index} sx={{ fontFamily: 'inherit', whiteSpace: 'pre-wrap', margin: 0 }}>
                 {line}
               </Typography>
             ))}
           </Box>
         </Paper>
       </Grid>
+
     </Grid>
   );
 };
