@@ -1,9 +1,20 @@
-import { useState, ChangeEvent, FormEvent } from 'react';
+import { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import { Box, Grid, TextField, Button, Paper, Typography } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CircularProgress from '@mui/material/CircularProgress';
 import { styled } from '@mui/material/styles';
 import axios from "axios";
+
+//From Smart Contract
+import {
+  useNetwork,
+  usePrepareContractWrite,
+  useContractWrite,
+  useContractRead,
+  useWaitForTransaction,
+} from "wagmi";
+
+import ContractInterface from "../../../../backend/abiFile.json";
 
 const PINATA_API_KEY = import.meta.env.VITE_PINATA_API_KEY;
 const PINATA_API_SECRET = import.meta.env.VITE_PINATA_API_SECRET;
@@ -20,10 +31,82 @@ const VisuallyHiddenInput = styled('input')({
 
 const Dashboard = () => {
   const [image, setImage] = useState<File | null>(null);
-  const [tokenURI, setTokenURI] = useState('');
   const [output, setOutput] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  //--------------------------------------Wagmi------------------------------
+  const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS;
+  const { chain } = useNetwork()
+  const [tokenURI, setTokenURI] = useState('');
+  const [totalMinted, setTotalMinted] = useState(0);
+  const [tokenId, setTokenId] = useState("");
+
+  const { data: tokenCounter } = useContractRead({
+    abi: ContractInterface,
+    address: CONTRACT_ADDRESS,
+    functionName: "tokenCounter",
+    watch: true,
+  });
+
+  useEffect(() => {
+    if (tokenCounter) {
+      setTotalMinted(Number(tokenCounter));
+      setTokenId(tokenCounter.toString()); // Update tokenId state when tokenCounter changes
+    }
+  }, [tokenCounter]);
+
+  const { config: contractWriteConfig } = usePrepareContractWrite({
+    abi: ContractInterface,
+    address: CONTRACT_ADDRESS,
+    functionName: "mint",
+    args: [tokenURI],
+    enabled: tokenURI.length > 0,
+  });
+
+  const { data: mintData, write } = useContractWrite(contractWriteConfig);
+
+  const { isSuccess: txSuccess } = useWaitForTransaction({ hash: mintData?.hash });
+
+  const [etherscanUrl, setEtherscanUrl] = useState("");
+  const [openSeaUrl, setOpenSeaUrl] = useState("");
+
+  useEffect(() => {
+    const displayEtherscanLink = () => {
+      if (txSuccess && chain) {
+        let etherscanBaseUrl = "";
+        let openSeaBaseUrl = "";
+
+        switch (chain.id) {
+          case 1: // Mainnet
+            etherscanBaseUrl = `https://etherscan.io/tx/${mintData?.hash}`;
+            openSeaBaseUrl = `https://opensea.io/assets/${process.env.CONTRACT_ADDRESS}/${tokenId}`;
+            break;
+          case 5: // Goerli
+            etherscanBaseUrl = `https://goerli.etherscan.io/tx/${mintData?.hash}`;
+            openSeaBaseUrl = `https://testnets.opensea.io/assets/${process.env.CONTRACT_ADDRESS}/${tokenId}`;
+            break;
+          case 11155111: // Sepolia
+            etherscanBaseUrl = `https://sepolia.etherscan.io/tx/${mintData?.hash}`;
+            openSeaBaseUrl = "OpenSea link not available";
+            break;
+          default:
+            etherscanBaseUrl = "Etherscan link not available";
+            openSeaBaseUrl = "OpenSea link not available";
+        }
+
+        setEtherscanUrl(etherscanBaseUrl);
+        setOpenSeaUrl(openSeaBaseUrl);
+      }
+    };
+
+    displayEtherscanLink();
+  }, [txSuccess, mintData, chain, tokenId]);
+
+  const handleMint = () => {
+    write?.()
+  };
+
+  //--------------------------------------IPFS and Pinata------------------------------
   const appendOutput = (newOutput: string) => {
     setOutput(prevOutput => [...prevOutput, newOutput]);
   };
@@ -95,14 +178,8 @@ const Dashboard = () => {
     }
   };
 
-
-
-  const handleMint = () => {
-    // Minting logic here
-  };
-
   return (
-    <Grid container spacing={2} sx={{ width: '100%', maxHeight: '100vh' }}>
+    <Grid container spacing={2} sx={{ width: '100%', maxHeight: '100vh', alignItems: 'center', justifyContent: 'center', }}>
       {/* Generate Metadata Form */}
       <Grid item xs={12} md={4}>
         <Paper sx={{ p: 2, mb: 2 }}>
@@ -137,8 +214,23 @@ const Dashboard = () => {
         </Paper>
         <Paper sx={{ p: 2 }}>
           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>NFT Minter</Typography>
-          <TextField label="Token URI" variant="outlined" fullWidth value={tokenURI} onChange={(e) => setTokenURI(e.target.value)} required sx={{ mb: 2 }} />
-          <Button variant="contained" onClick={handleMint} fullWidth>Mint</Button>
+          <TextField
+            label="Token URI"
+            variant="outlined"
+            fullWidth
+            value={tokenURI}
+            onChange={(e) => setTokenURI(e.target.value)}
+            required
+            sx={{ mb: 2 }}
+          />
+          <Button
+            variant="contained"
+            onClick={handleMint}
+            fullWidth
+            disabled={!tokenURI || isLoading}
+          >
+            Mint NFT
+          </Button>
         </Paper>
       </Grid>
 
@@ -146,26 +238,49 @@ const Dashboard = () => {
       <Grid item xs={12} md={8}>
         <Paper
           sx={{
-            height: '80%',
+            height: '350pt',
             display: 'flex',
+            flexDirection: 'column', // Changed to column for vertical stacking
             alignItems: 'center',
             justifyContent: 'center',
             mb: 2,
-            p: 2, // Added comma here
+            p: 2,
             backgroundColor: '#7A70FF',
             backgroundImage: 'linear-gradient(-370deg, #3898FF, #7A70FF)',
           }}
         >
-          <Typography variant="h3" sx={{ textAlign: 'center', fontWeight: 'bold', width: '100%', color: '#FFFFFF' }}>
+          <Typography variant="h3" sx={{ textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', mb: 2 }}>
             NFT Mint Demo
           </Typography>
+          {txSuccess && (
+            <>
+              <Typography variant="h6" sx={{ textAlign: 'center', color: '#FFFFFF', mb: 1 }}>
+                Mint Successful!
+              </Typography>
+              <Typography variant="body1" sx={{ textAlign: 'center', color: '#FFFFFF', mb: 1 }}>
+                View on Etherscan: <a href={etherscanUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'lightblue' }}>{etherscanUrl}</a>
+              </Typography>
+              <Typography variant="body1" sx={{ textAlign: 'center', color: '#FFFFFF', mb: 1 }}>
+                View on OpenSea: {openSeaUrl !== "OpenSea link not available" ? (
+                  <a href={openSeaUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'lightblue' }}>{openSeaUrl}</a>
+                ) : (
+                  "OpenSea link not available"
+                )}
+              </Typography>
+              <Typography variant="body1" sx={{ textAlign: 'center', color: '#FFFFFF' }}>
+                Total Minted: {totalMinted}
+              </Typography>
+            </>
+          )}
         </Paper>
+
+
         <Paper
           sx={{
-            height: '20%',
+            height: '90pt',
             display: 'flex',
             flexDirection: 'column',
-            m: 0,
+            mb: 2,
             p: 2,
             backgroundColor: 'black',
             color: 'limegreen',

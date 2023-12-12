@@ -1,0 +1,1 @@
+brownie networks add Ethereum sepolia host="https://sepolia.infura.io/v3/YOUR_PROJ_ID" chainid=11155111 
