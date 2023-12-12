@@ -1,7 +1,11 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import { useState, ChangeEvent, FormEvent } from 'react';
 import { Box, Grid, TextField, Button, Paper, Typography } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
+import axios from "axios";
+
+const PINATA_API_KEY = import.meta.env.VITE_PINATA_API_KEY;
+const PINATA_API_SECRET = import.meta.env.VITE_PINATA_API_SECRET;
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -16,7 +20,12 @@ const VisuallyHiddenInput = styled('input')({
 const Dashboard = () => {
   const [image, setImage] = useState<File | null>(null);
   const [tokenURI, setTokenURI] = useState('');
-  const [output, setOutput] = useState('');
+  const [output, setOutput] = useState<string[]>([]);
+
+  const appendOutput = (newOutput: string) => {
+    setOutput(prevOutput => [...prevOutput, newOutput]);
+  };
+
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -24,14 +33,65 @@ const Dashboard = () => {
     }
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!image) {
-      alert('Please upload an image.');
-      return;
+    const formData = new FormData(event.currentTarget);
+
+    const name = formData.get('name') as string;
+    const universityName = formData.get('university_name') as string;
+    const studentId = formData.get('student_id') as string;
+    const issuedDate = formData.get('issued_date') as string;
+    const signer = formData.get('signer') as string;
+
+    if (image) {
+      formData.append("file", image);
     }
-    setOutput('Form Submitted with Image');
-    // Process form data here
+
+    try {
+      const resFile = await axios.post(
+        "https://api.pinata.cloud/pinning/pinFileToIPFS",
+        formData,
+        {
+          headers: {
+            pinata_api_key: PINATA_API_KEY,
+            pinata_secret_api_key: PINATA_API_SECRET,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      const imgHash = `https://ipfs.io/ipfs/${resFile.data.IpfsHash}`;
+
+      const metadata = {
+        name,
+        image: imgHash,
+        description: {
+          universityName,
+          studentId,
+          issuedDate,
+          signer
+        }
+      };
+
+      const resJSON = await axios.post(
+        "https://api.pinata.cloud/pinning/pinJsonToIPFS",
+        metadata,
+        {
+          headers: {
+            pinata_api_key: PINATA_API_KEY,
+            pinata_secret_api_key: PINATA_API_SECRET,
+          },
+        }
+      );
+
+      const tokenURI = `https://ipfs.io/ipfs/${resJSON.data.IpfsHash}`;
+      console.log("Token URI:", tokenURI);
+
+      // Append the tokenURI to the output array
+      appendOutput("Token URI: " + tokenURI);
+    } catch (error) {
+      console.error("Error uploading file: ", error);
+    }
   };
 
   const handleMint = () => {
@@ -44,7 +104,7 @@ const Dashboard = () => {
       <Grid item xs={12} md={4}>
         <Paper sx={{ p: 2, mb: 2 }}>
           <Typography variant="h6" sx={{ fontWeight: 'bold', paddingBottom: '10pt' }}>Generate Metadata</Typography>
-          <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box component="form" onSubmit={handleFormSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {/* Form Fields */}
             <TextField label="Name" variant="outlined" name="name" required />
             <TextField label="University Name" variant="outlined" name="university_name" required />
@@ -99,8 +159,15 @@ const Dashboard = () => {
 
       <Grid item xs={12} md={2}>
         <Paper
-          sx={{height: '100%', display: 'flex', m: 0,p: 2,}}>
-          <Typography variant="h6" sx={{ fontWeight: 'bold', paddingBottom: '10pt' }}>Output Logging</Typography>
+          sx={{ height: '100%', display: 'flex', m: 0, p: 2, }}>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', paddingBottom: '10pt' }}>Terminal</Typography>
+          <Box sx={{ overflow: 'auto', flexGrow: 1 }}>
+            {output.map((line, index) => (
+              <Typography key={index} sx={{ fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}>
+                {line}
+              </Typography>
+            ))}
+          </Box>
         </Paper>
       </Grid>
     </Grid>
