@@ -1,6 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
-import Box from '@mui/material/Box';
-import { TextField, Button, Paper, Typography } from '@mui/material';
+import { Box, Grid, TextField, Button, Paper, Typography } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
 
@@ -40,12 +39,13 @@ const Home = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex', width: '100%', gap: 2, maxHeight: '100vh', overflow: 'auto' }}>
+    <Grid container spacing={2} sx={{ width: '100%', maxHeight: '100vh', overflow: 'auto' }}>
       {/* Generate Metadata Form */}
-      <Box sx={{ width: '33.33%', p: 2 }}>
+      <Grid item xs={12} md={4}>
         <Paper sx={{ p: 2, mb: 2 }}>
           <Typography variant="h6" sx={{ fontWeight: 'bold', paddingBottom: '10pt' }}>Generate Metadata</Typography>
           <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            {/* Form Fields */}
             <TextField label="Name" variant="outlined" name="name" required />
             <TextField label="University Name" variant="outlined" name="university_name" required />
             <TextField label="Student ID" variant="outlined" name="student_id" required />
@@ -59,7 +59,7 @@ const Home = () => {
               <Box sx={{ flex: '1' }}>
                 <label htmlFor="raised-button-file" style={{ width: '100%' }}>
                   <Button fullWidth component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-                    Upload Image
+                    Upload
                     <VisuallyHiddenInput accept="image/*" id="raised-button-file" type="file" name="image" onChange={handleImageChange} />
                   </Button>
                 </label>
@@ -70,23 +70,21 @@ const Home = () => {
             </Box>
           </Box>
         </Paper>
-
-        {/* NFT Minter Form */}
         <Paper sx={{ p: 2 }}>
           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>NFT Minter</Typography>
           <TextField label="Token URI" variant="outlined" fullWidth value={tokenURI} onChange={(e) => setTokenURI(e.target.value)} required sx={{ mb: 2 }} />
           <Button variant="contained" onClick={handleMint} fullWidth>Mint</Button>
         </Paper>
-      </Box>
+      </Grid>
 
       {/* Terminal Output Section */}
-      <Box sx={{ width: '66.66%', p: 2 }}>
+      <Grid item xs={12} md={8}>
         <Paper sx={{ minHeight: "100%", p: 2, backgroundColor: '#333', color: 'white' }}>
           <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'lightgreen' }}>Terminal Output</Typography>
           <Box sx={{ fontFamily: 'monospace', marginTop: 2 }}>{output || 'No output yet...'}</Box>
         </Paper>
-      </Box>
-    </Box>
+      </Grid>
+    </Grid>
   );
 };
 
