@@ -4,6 +4,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CircularProgress from '@mui/material/CircularProgress';
 import { styled } from '@mui/material/styles';
 import axios from "axios";
+import Grow from '@mui/material/Grow';
 
 //From Smart Contract
 import {
@@ -103,8 +104,17 @@ const Dashboard = () => {
   }, [txSuccess, mintData, chain, tokenId]);
 
   const handleMint = () => {
-    write?.()
+    setIsLoading(true);
+    write?.();
   };
+
+  useEffect(() => {
+    if (txSuccess) {
+      setIsLoading(false);
+      // Additional actions to take after successful minting
+    }
+  }, [txSuccess]);
+
 
   //--------------------------------------IPFS and Pinata------------------------------
   const appendOutput = (newOutput: string) => {
@@ -229,7 +239,7 @@ const Dashboard = () => {
             fullWidth
             disabled={!tokenURI || isLoading}
           >
-            Mint NFT
+            {isLoading ? <CircularProgress size={24} /> : "Mint NFT"}
           </Button>
         </Paper>
       </Grid>
@@ -247,6 +257,7 @@ const Dashboard = () => {
             p: 2,
             backgroundColor: '#7A70FF',
             backgroundImage: 'linear-gradient(-370deg, #3898FF, #7A70FF)',
+            borderRadius: '15pt'
           }}
         >
           <Typography variant="h3" sx={{ textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', mb: 2 }}>
@@ -254,26 +265,36 @@ const Dashboard = () => {
           </Typography>
           {txSuccess && (
             <>
-              <Typography variant="h6" sx={{ textAlign: 'center', color: '#FFFFFF', mb: 1 }}>
-                Mint Successful!
-              </Typography>
-              <Typography variant="body1" sx={{ textAlign: 'center', color: '#FFFFFF', mb: 1 }}>
-                View on Etherscan: <a href={etherscanUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'lightblue' }}>{etherscanUrl}</a>
-              </Typography>
-              <Typography variant="body1" sx={{ textAlign: 'center', color: '#FFFFFF', mb: 1 }}>
-                View on OpenSea: {openSeaUrl !== "OpenSea link not available" ? (
-                  <a href={openSeaUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'lightblue' }}>{openSeaUrl}</a>
+              <Grow in={txSuccess} style={{ transformOrigin: '0 0 0' }} timeout={500}>
+                <Typography variant="h6" sx={{ textAlign: 'center', color: '#FFFFFF', mb: 5 }}>
+                  Mint Successful!
+                </Typography>
+              </Grow>
+              <Grow in={txSuccess} style={{ transformOrigin: '0 0 0' }} timeout={700}>
+                <Button variant="contained" href={etherscanUrl} target="_blank" rel="noopener noreferrer" sx={{ mb: 1, bgcolor: 'lightblue', ':hover': { bgcolor: 'blue' } }}>
+                  Etherscan
+                </Button>
+              </Grow>
+              <Grow in={txSuccess} style={{ transformOrigin: '0 0 0' }} timeout={900}>
+                {openSeaUrl !== "OpenSea link not available" ? (
+                  <Button variant="contained" href={openSeaUrl} target="_blank" rel="noopener noreferrer" sx={{ mb: 1, bgcolor: 'lightblue', ':hover': { bgcolor: 'blue' } }}>
+                    OpenSea
+                  </Button>
                 ) : (
-                  "OpenSea link not available"
+                  <Typography variant="body1" sx={{ textAlign: 'center', color: '#FFFFFF', mb: 5 }}>
+                    OpenSea link not available
+                  </Typography>
                 )}
-              </Typography>
-              <Typography variant="body1" sx={{ textAlign: 'center', color: '#FFFFFF' }}>
-                Total Minted: {totalMinted}
-              </Typography>
+              </Grow>
+              <Grow in={txSuccess} style={{ transformOrigin: '0 0 0' }} timeout={1100}>
+                <Typography variant="body1" sx={{ textAlign: 'center', color: '#FFFFFF' }}>
+                  Total Minted: {totalMinted}
+                </Typography>
+              </Grow>
             </>
           )}
-        </Paper>
 
+        </Paper>
 
         <Paper
           sx={{

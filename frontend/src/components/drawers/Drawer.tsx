@@ -14,6 +14,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
@@ -126,7 +127,7 @@ const Drawers = ({ children }: { children: React.ReactNode }) => {
             </AppBar>
             <Drawer variant="permanent" open={open}>
                 <DrawerHeader>
-                    <Box sx={{display: 'flex', alignItems: 'center',  justifyContent: 'center', width: '100%' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
                         <img
                             src="/ku_logo.png"
                             alt="Kasetsart University Logo"
@@ -134,7 +135,7 @@ const Drawers = ({ children }: { children: React.ReactNode }) => {
                         />
                         <Typography
                             variant="h6"
-                            sx={{fontWeight: 'bold', flexGrow: 1 }}
+                            sx={{ fontWeight: 'bold', flexGrow: 1 }}
                         >
                             KASETSART
                         </Typography>
@@ -160,6 +161,16 @@ const Drawers = ({ children }: { children: React.ReactNode }) => {
                         <ListItemButton component={Link} to="/dashboard">
                             <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
                                 <DashboardIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Dashboard" sx={{ opacity: open ? 1 : 0 }} />
+                        </ListItemButton>
+                    </ListItem>
+
+                    {/*Admin item */}
+                    <ListItem disablePadding sx={{ display: 'block' }}>
+                        <ListItemButton component={Link} to="/admin">
+                            <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
+                                <AdminPanelSettingsIcon />
                             </ListItemIcon>
                             <ListItemText primary="Dashboard" sx={{ opacity: open ? 1 : 0 }} />
                         </ListItemButton>
