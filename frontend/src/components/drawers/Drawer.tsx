@@ -172,7 +172,7 @@ const Drawers = ({ children }: { children: React.ReactNode }) => {
                             <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
                                 <AdminPanelSettingsIcon />
                             </ListItemIcon>
-                            <ListItemText primary="Dashboard" sx={{ opacity: open ? 1 : 0 }} />
+                            <ListItemText primary="Admin Panel" sx={{ opacity: open ? 1 : 0 }} />
                         </ListItemButton>
                     </ListItem>
                 </List>
