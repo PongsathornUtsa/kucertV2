@@ -288,6 +288,39 @@ const Admin = () => {
     }
   }, [recoveredAddress]);
 
+  //---------------------------set Signature------------------
+
+  const [signature, setSignature] = useState("");
+  const [signatureTokenId, setSignatureTokenId] = useState("");
+
+  const { config: setSignatureConfig } = usePrepareContractWrite({
+    abi: ContractInterface,
+    address: CONTRACT_ADDRESS,
+    functionName: "setCertificateSignature",
+    args: [parseInt(signatureTokenId, 10), signature],
+    enabled: !!(signatureTokenId && signature),
+  });
+
+  const { write: setSignatureWrite , isSuccess: setted} = useContractWrite(setSignatureConfig);
+
+  const handleSubmitSetSignature =  (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const tokenIdInt = parseInt(signatureTokenId, 10);
+    if (!Number.isInteger(tokenIdInt) || tokenIdInt > totalMinted) {
+      alert('Please enter a valid tokenId');
+      return;
+    }
+    setSignatureWrite?.();
+  };
+
+  useEffect(() => {
+    if (setted) {
+      appendOutput(`Saved token signature successfully`);
+      setSignature('');
+      setSignatureTokenId('')
+    }
+  }, [setted]);
+
   return (
     <>
       <Box>
@@ -379,13 +412,14 @@ const Admin = () => {
 
             <Paper
               component="form"
-              // onSubmit={handleSubmitSetSignature}  
+              onSubmit={handleSubmitSetSignature}  
               sx={{ p: 2, mb: 2 }}
             >
               <Typography variant="h6" sx={{ fontWeight: 'bold', paddingBottom: '10pt' }}>Set a signature for specific token id</Typography>
               <TextField
                 label="Enter Token ID"
-                // value={signatureTokenId} onChange={(e) => setSignatureTokenId(e.target.value)}
+                value={signatureTokenId} 
+                onChange={(e) => setSignatureTokenId(e.target.value)}
                 variant="outlined"
                 fullWidth
                 required
@@ -393,7 +427,8 @@ const Admin = () => {
               />
               <TextField
                 label="Enter Signature"
-                // value={signature} onChange={(e) => setSignature(e.target.value)}
+                value={signature} 
+                onChange={(e) => setSignature(e.target.value)}
                 variant="outlined"
                 fullWidth
                 required
@@ -401,6 +436,7 @@ const Admin = () => {
               />
               <Button type="submit" variant="contained">Save Signature</Button>
             </Paper>
+
           </Grid>
 
           {/* Third Grid Item */}
