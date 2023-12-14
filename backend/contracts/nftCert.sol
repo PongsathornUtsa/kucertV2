@@ -17,7 +17,7 @@ contract nftCert is ERC721URIStorage, AccessControl {
     event CertificateSignatureSet(uint256 indexed tokenId, bytes signature);
 
     constructor() ERC721("KuCert", "KCRT") {
-        tokenCounter = 0;
+        tokenCounter = 1;
         _grantRole(ADMIN_ROLE, msg.sender);
         _grantRole(UNIVERSITY_ROLE, msg.sender);
         _setRoleAdmin(UNIVERSITY_ROLE, ADMIN_ROLE);
@@ -41,14 +41,13 @@ contract nftCert is ERC721URIStorage, AccessControl {
         _revokeRole(role, account);
     }
 
-    function safeTransferFrom(
+    function universitySafeTransferFrom(
         address from,
         address to,
-        uint256 tokenId,
-        bytes memory _data
-    ) public virtual override(ERC721, IERC721) onlyRole(UNIVERSITY_ROLE) {
+        uint256 tokenId
+    ) public onlyRole(UNIVERSITY_ROLE) {
         require(_msgSender() == ownerOf(tokenId) || getApproved(tokenId) == _msgSender() || isApprovedForAll(ownerOf(tokenId), _msgSender()), "ERC721: transfer caller is not owner nor approved");
-        _safeTransfer(from, to, tokenId, _data);
+        _safeTransfer(from, to, tokenId, "");
     }
 
     function setCertificateSignature(uint256 tokenId, bytes memory signature) public onlyRole(UNIVERSITY_ROLE) {

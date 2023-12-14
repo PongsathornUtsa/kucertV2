@@ -1,13 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" href="/ku_logo.jpg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NFT Certificate</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/ku_logo.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NFT Certificate</title>
+</head>
+
+<script>window.global = window;</script>
+<script type="module">
+  import { Buffer } from "buffer/"; // <-- no typo here ("/")
+  import process from "process";
+
+  window.Buffer = Buffer;
+  window.process = process;
+</script>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
+
+
 </html>

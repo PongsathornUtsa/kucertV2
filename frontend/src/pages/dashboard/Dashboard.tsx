@@ -189,138 +189,140 @@ const Dashboard = () => {
   };
 
   return (
-    <Grid container spacing={2} sx={{ width: '100%', maxHeight: '100vh', alignItems: 'center', justifyContent: 'center', }}>
-      {/* Generate Metadata Form */}
-      <Grid item xs={12} md={4}>
-        <Paper sx={{ p: 2, mb: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 'bold', paddingBottom: '10pt' }}>Generate Metadata</Typography>
-          <Box component="form" onSubmit={handleFormSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            {/* Form Fields */}
-            <TextField label="Name" variant="outlined" name="name" required />
-            <TextField label="University Name" variant="outlined" name="university_name" required />
-            <TextField label="Student ID" variant="outlined" name="student_id" required />
-            <Box sx={{ display: 'flex', gap: 2 }}>
-              <TextField label="Issued Date" variant="outlined" name="issued_date" type="date" InputLabelProps={{ shrink: true }} sx={{ flex: 1 }} required />
-              <TextField label="Signer" variant="outlined" name="signer" sx={{ flex: 1 }} required />
-            </Box>
+    <>
+      <Grid container spacing={2} alignItems="stretch">
+        {/* Generate Metadata Form */}
+        <Grid item xs={12} md={4}>
+          <Paper sx={{ p: 2, mb: 2 }}>
+            <Typography variant="h6" sx={{ fontWeight: 'bold', paddingBottom: '10pt' }}>Generate Metadata</Typography>
+            <Box component="form" onSubmit={handleFormSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              {/* Form Fields */}
+              <TextField label="Name" variant="outlined" name="name" required />
+              <TextField label="University Name" variant="outlined" name="university_name" required />
+              <TextField label="Student ID" variant="outlined" name="student_id" required />
+              <Box sx={{ display: 'flex', gap: 2 }}>
+                <TextField label="Issued Date" variant="outlined" name="issued_date" type="date" InputLabelProps={{ shrink: true }} sx={{ flex: 1 }} required />
+                <TextField label="Signer" variant="outlined" name="signer" sx={{ flex: 1 }} required />
+              </Box>
 
-            {/* Buttons */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
-              <Box sx={{ flex: '1' }}>
-                <label htmlFor="raised-button-file" style={{ width: '100%' }}>
-                  <Button fullWidth component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-                    Upload
-                    <VisuallyHiddenInput accept="image/*" id="raised-button-file" type="file" name="image" onChange={handleImageChange} />
+              {/* Buttons */}
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
+                <Box sx={{ flex: '1' }}>
+                  <label htmlFor="raised-button-file" style={{ width: '100%' }}>
+                    <Button fullWidth component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                      Upload
+                      <VisuallyHiddenInput accept="image/*" id="raised-button-file" type="file" name="image" onChange={handleImageChange} />
+                    </Button>
+                  </label>
+                </Box>
+                <Box sx={{ flex: '1' }}>
+                  <Button fullWidth variant="contained" type="submit" disabled={isLoading}>
+                    {isLoading ? <CircularProgress size={24} /> : "Submit"}
                   </Button>
-                </label>
-              </Box>
-              <Box sx={{ flex: '1' }}>
-                <Button fullWidth variant="contained" type="submit" disabled={isLoading}>
-                  {isLoading ? <CircularProgress size={24} /> : "Submit"}
-                </Button>
+                </Box>
               </Box>
             </Box>
-          </Box>
-        </Paper>
-        <Paper sx={{ p: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>NFT Minter</Typography>
-          <TextField
-            label="Token URI"
-            variant="outlined"
-            fullWidth
-            value={tokenURI}
-            onChange={(e) => setTokenURI(e.target.value)}
-            required
-            sx={{ mb: 2 }}
-          />
-          <Button
-            variant="contained"
-            onClick={handleMint}
-            fullWidth
-            disabled={!tokenURI || isLoading}
+          </Paper>
+          <Paper sx={{ p: 2 }}>
+            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>NFT Minter</Typography>
+            <TextField
+              label="Token URI"
+              variant="outlined"
+              fullWidth
+              value={tokenURI}
+              onChange={(e) => setTokenURI(e.target.value)}
+              required
+              sx={{ mb: 2 }}
+            />
+            <Button
+              variant="contained"
+              onClick={handleMint}
+              fullWidth
+              disabled={!tokenURI || isLoading}
+            >
+              {isLoading ? <CircularProgress size={24} /> : "Mint NFT"}
+            </Button>
+          </Paper>
+        </Grid>
+
+        {/* NFT Mint Demo Section */}
+        <Grid item xs={12} md={8}>
+          <Paper
+            sx={{
+              height: '350pt',
+              display: 'flex',
+              flexDirection: 'column', // Changed to column for vertical stacking
+              alignItems: 'center',
+              justifyContent: 'center',
+              mb: 2,
+              p: 2,
+              backgroundColor: '#7A70FF',
+              backgroundImage: 'linear-gradient(-370deg, #3898FF, #7A70FF)',
+              borderRadius: '15pt'
+            }}
           >
-            {isLoading ? <CircularProgress size={24} /> : "Mint NFT"}
-          </Button>
-        </Paper>
-      </Grid>
-
-      {/* NFT Mint Demo Section */}
-      <Grid item xs={12} md={8}>
-        <Paper
-          sx={{
-            height: '350pt',
-            display: 'flex',
-            flexDirection: 'column', // Changed to column for vertical stacking
-            alignItems: 'center',
-            justifyContent: 'center',
-            mb: 2,
-            p: 2,
-            backgroundColor: '#7A70FF',
-            backgroundImage: 'linear-gradient(-370deg, #3898FF, #7A70FF)',
-            borderRadius: '15pt'
-          }}
-        >
-          <Typography variant="h3" sx={{ textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', mb: 2 }}>
-            NFT Mint Demo
-          </Typography>
-          {txSuccess && (
-            <>
-              <Grow in={txSuccess} style={{ transformOrigin: '0 0 0' }} timeout={500}>
-                <Typography variant="h6" sx={{ textAlign: 'center', color: '#FFFFFF', mb: 5 }}>
-                  Mint Successful!
-                </Typography>
-              </Grow>
-              <Grow in={txSuccess} style={{ transformOrigin: '0 0 0' }} timeout={700}>
-                <Button variant="contained" href={etherscanUrl} target="_blank" rel="noopener noreferrer" sx={{ mb: 1, bgcolor: 'lightblue', ':hover': { bgcolor: 'blue' } }}>
-                  Etherscan
-                </Button>
-              </Grow>
-              <Grow in={txSuccess} style={{ transformOrigin: '0 0 0' }} timeout={900}>
-                {openSeaUrl !== "OpenSea link not available" ? (
-                  <Button variant="contained" href={openSeaUrl} target="_blank" rel="noopener noreferrer" sx={{ mb: 1, bgcolor: 'lightblue', ':hover': { bgcolor: 'blue' } }}>
-                    OpenSea
-                  </Button>
-                ) : (
-                  <Typography variant="body1" sx={{ textAlign: 'center', color: '#FFFFFF', mb: 5 }}>
-                    OpenSea link not available
+            <Typography variant="h3" sx={{ textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', mb: 2 }}>
+              NFT Mint Demo
+            </Typography>
+            {txSuccess && (
+              <>
+                <Grow in={txSuccess} style={{ transformOrigin: '0 0 0' }} timeout={500}>
+                  <Typography variant="h6" sx={{ textAlign: 'center', color: '#FFFFFF', mb: 5 }}>
+                    Mint Successful!
                   </Typography>
-                )}
-              </Grow>
-              <Grow in={txSuccess} style={{ transformOrigin: '0 0 0' }} timeout={1100}>
-                <Typography variant="body1" sx={{ textAlign: 'center', color: '#FFFFFF' }}>
-                  Total Minted: {totalMinted}
+                </Grow>
+                <Grow in={txSuccess} style={{ transformOrigin: '0 0 0' }} timeout={700}>
+                  <Button variant="contained" href={etherscanUrl} target="_blank" rel="noopener noreferrer" sx={{ mb: 1, bgcolor: 'lightblue', ':hover': { bgcolor: 'blue' } }}>
+                    Etherscan
+                  </Button>
+                </Grow>
+                <Grow in={txSuccess} style={{ transformOrigin: '0 0 0' }} timeout={900}>
+                  {openSeaUrl !== "OpenSea link not available" ? (
+                    <Button variant="contained" href={openSeaUrl} target="_blank" rel="noopener noreferrer" sx={{ mb: 1, bgcolor: 'lightblue', ':hover': { bgcolor: 'blue' } }}>
+                      OpenSea
+                    </Button>
+                  ) : (
+                    <Typography variant="body1" sx={{ textAlign: 'center', color: '#FFFFFF', mb: 5 }}>
+                      OpenSea link not available
+                    </Typography>
+                  )}
+                </Grow>
+                <Grow in={txSuccess} style={{ transformOrigin: '0 0 0' }} timeout={1100}>
+                  <Typography variant="body1" sx={{ textAlign: 'center', color: '#FFFFFF' }}>
+                    Total Minted: {totalMinted}
+                  </Typography>
+                </Grow>
+              </>
+            )}
+
+          </Paper>
+
+          <Paper
+            sx={{
+              height: '90pt',
+              display: 'flex',
+              flexDirection: 'column',
+              mb: 2,
+              p: 2,
+              backgroundColor: 'black',
+              color: 'limegreen',
+              fontFamily: 'monospace',
+              overflow: 'auto',
+            }}
+          >
+            <Typography variant="h6" sx={{ fontWeight: 'bold', paddingBottom: '10pt' }}>Terminal</Typography>
+            <Box sx={{ flexGrow: 1, p: 2 }}>
+              {output.map((line, index) => (
+                <Typography key={index} sx={{ fontFamily: 'inherit', whiteSpace: 'pre-wrap', margin: 0 }}>
+                  {line}
                 </Typography>
-              </Grow>
-            </>
-          )}
+              ))}
+            </Box>
+          </Paper>
+        </Grid>
 
-        </Paper>
-
-        <Paper
-          sx={{
-            height: '90pt',
-            display: 'flex',
-            flexDirection: 'column',
-            mb: 2,
-            p: 2,
-            backgroundColor: 'black',
-            color: 'limegreen',
-            fontFamily: 'monospace',
-            overflow: 'auto',
-          }}
-        >
-          <Typography variant="h6" sx={{ fontWeight: 'bold', paddingBottom: '10pt' }}>Terminal</Typography>
-          <Box sx={{ flexGrow: 1, p: 2 }}>
-            {output.map((line, index) => (
-              <Typography key={index} sx={{ fontFamily: 'inherit', whiteSpace: 'pre-wrap', margin: 0 }}>
-                {line}
-              </Typography>
-            ))}
-          </Box>
-        </Paper>
       </Grid>
-
-    </Grid>
+    </>
   );
 };
 
