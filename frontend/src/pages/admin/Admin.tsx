@@ -10,6 +10,7 @@ import {
 
 import ContractInterface from "../../../../backend/abiFile.json";
 
+import FormDialog from './FormDialog';
 //import { useSignMessage } from 'wagmi';
 //import { recoverMessageAddress } from 'viem'
 
@@ -208,6 +209,16 @@ const Admin = () => {
   }, [isLoading]);
 
   //---------------------------------Signature-------------------------------------
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleOpenDialog = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+  };
+
 
   return (
     <>
@@ -294,7 +305,8 @@ const Admin = () => {
                   <Button type="submit" variant="contained" fullWidth>Sign</Button>
                 </Grid>
                 <Grid item xs={3}>
-                  <Button variant="contained" fullWidth>Template</Button>
+                  <Button variant="contained" onClick={handleOpenDialog} fullWidth>Template</Button>
+                  <FormDialog open={isDialogOpen} onClose={handleCloseDialog} />
                 </Grid>
               </Grid>
             </Paper>
