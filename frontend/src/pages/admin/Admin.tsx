@@ -1,5 +1,5 @@
 import { Box, Grid, Paper, Typography, TextField, Button, InputLabel, Select, MenuItem, SelectChangeEvent, FormControl } from '@mui/material';
-import { useState, ChangeEvent, FormEvent, useEffect } from 'react';
+import { useState, ChangeEvent, FormEvent, useEffect, useRef } from 'react';
 
 //From Smart Contract
 import {
@@ -11,8 +11,8 @@ import {
 import ContractInterface from "../../../../backend/abiFile.json";
 
 import FormDialog from './FormDialog';
-//import { useSignMessage } from 'wagmi';
-//import { recoverMessageAddress } from 'viem'
+import { useSignMessage } from 'wagmi';
+import { recoverMessageAddress } from 'viem'
 
 const Admin = () => {
 
@@ -33,7 +33,7 @@ const Admin = () => {
     onSuccess(data) {
       if (data) {
         const total = parseInt(data.toString(), 10);
-        setTotalMinted(total - 1 );
+        setTotalMinted(total - 1);
         setPrepareOwnerRead(false);
       }
     },
@@ -67,7 +67,7 @@ const Admin = () => {
     event.preventDefault();
     const tokenIdInt = parseInt(searchTokenId, 10);
 
-    if (!Number.isInteger(tokenIdInt) || tokenIdInt > totalMinted ) {
+    if (!Number.isInteger(tokenIdInt) || tokenIdInt > totalMinted) {
       alert("Invalid Token ID. Please enter a valid Token ID within the range of minted tokens.");
       return;
     }
@@ -219,6 +219,29 @@ const Admin = () => {
     setIsDialogOpen(false);
   };
 
+  const [recoveredAddress, setRecoveredAddress] = useState<string | undefined>();
+  const { data: signMessageData, isLoading: loadingSign, signMessage, variables } = useSignMessage()
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      if (variables?.message && signMessageData) {
+        const recovered = await recoverMessageAddress({
+          message: variables.message,
+          signature: signMessageData,
+        })
+        setRecoveredAddress(recovered)
+      }
+    })()
+  }, [signMessageData, variables?.message])
+
+  const handleSignClick = () => {
+    signMessage({ message })
+  }
+
+  useEffect(() => {
+    console.log('Recovered Address:', recoveredAddress);
+  }, [recoveredAddress]);
 
   return (
     <>
@@ -284,15 +307,12 @@ const Admin = () => {
 
           {/* Second Grid Item */}
           <Grid item xs={12} md={4}>
-            <Paper
-              component="form"
-              // onSubmit={handleSubmitSignMessage} 
-              sx={{ p: 2, mb: 2 }}
-            >
+            <Paper component="form" sx={{ p: 2, mb: 2 }}>
               <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>Enter a message to sign</Typography>
               <TextField
                 label="...Metadata"
-                // value={message} onChange={(e) => setMessage(e.target.value)}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
                 multiline
                 variant="outlined"
                 fullWidth
@@ -302,7 +322,7 @@ const Admin = () => {
               {/* Button Grid */}
               <Grid container spacing={2}>
                 <Grid item xs={3}>
-                  <Button type="submit" variant="contained" fullWidth>Sign</Button>
+                  <Button variant="contained" onClick={handleSignClick} fullWidth>Sign</Button>
                 </Grid>
                 <Grid item xs={3}>
                   <Button variant="contained" onClick={handleOpenDialog} fullWidth>Template</Button>
