@@ -1,12 +1,12 @@
 import { Box, Grid, Paper, Typography, TextField, Button } from '@mui/material';
 import { useState, useEffect, FormEvent } from 'react';
-import { verifyMessage ,Signature} from 'ethers';
+import { verifyMessage } from 'ethers';
 
 // From Smart Contract
 import {
     useContractRead,
 } from "wagmi";
-import ContractInterface from "../../../../backend/abiFile.json";
+import ContractInterface from "../../abiFile.json";
 
 const Service = () => {
     const [output, setOutput] = useState<string[]>([]);
@@ -142,18 +142,17 @@ const Service = () => {
                     </Paper>
                 </Grid>
 
-                {/* Terminal Component */}
                 <Grid item xs={12}>
                     <Paper
                         sx={{
-                            height: '120px', // Adjusted for more space
+                            height: '120px', 
                             pl: 2,
                             backgroundColor: 'black',
                             color: 'limegreen',
                             fontFamily: 'monospace',
                             mb: 2,
                             position: 'relative',
-                            overflowY: 'auto' // Scrollable
+                            overflowY: 'auto' 
                         }}>
                         <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Terminal</Typography>
                         <Box sx={{

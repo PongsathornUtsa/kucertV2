@@ -15,7 +15,7 @@ import {
   useWaitForTransaction,
 } from "wagmi";
 
-import ContractInterface from "../../../../backend/abiFile.json";
+import ContractInterface from "../../abiFile.json";
 
 const PINATA_API_KEY = import.meta.env.VITE_PINATA_API_KEY;
 const PINATA_API_SECRET = import.meta.env.VITE_PINATA_API_SECRET;
@@ -191,12 +191,10 @@ const Dashboard = () => {
   return (
     <>
       <Grid container spacing={2} alignItems="stretch">
-        {/* Generate Metadata Form */}
         <Grid item xs={12} md={4}>
           <Paper sx={{ p: 2, mb: 2 }}>
             <Typography variant="h6" sx={{ fontWeight: 'bold', paddingBottom: '10pt' }}>Generate Metadata</Typography>
             <Box component="form" onSubmit={handleFormSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {/* Form Fields */}
               <TextField label="Name" variant="outlined" name="name" required />
               <TextField label="University Name" variant="outlined" name="university_name" required />
               <TextField label="Student ID" variant="outlined" name="student_id" required />
@@ -205,7 +203,6 @@ const Dashboard = () => {
                 <TextField label="Signer" variant="outlined" name="signer" sx={{ flex: 1 }} required />
               </Box>
 
-              {/* Buttons */}
               <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
                 <Box sx={{ flex: '1' }}>
                   <label htmlFor="raised-button-file" style={{ width: '100%' }}>
@@ -245,14 +242,12 @@ const Dashboard = () => {
           </Paper>
         </Grid>
 
-        {/* NFT Mint Demo Section */}
         <Grid item xs={12} md={8}>
           <Paper
             sx={{
               height: '350pt',
               display: 'flex',
-              flexDirection: 'column', // Changed to column for vertical stacking
-              alignItems: 'center',
+              flexDirection: 'column', 
               justifyContent: 'center',
               mb: 2,
               p: 2,

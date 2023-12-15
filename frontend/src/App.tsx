@@ -10,7 +10,7 @@ function App() {
   const { isConnected } = useAccount();
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/kucert">
       <Drawers>
         <Routes>
           <Route path="/" element={<Home />} />

@@ -23,7 +23,6 @@ const Home = () => {
     <Box sx={{ paddingTop: '64pt' }}> 
       <style dangerouslySetInnerHTML={{ __html: keyframes }} />
         <Grid container spacing={2} alignItems="stretch" justifyContent="center" sx={{  height: '100%'}}>
-          {/* Text Section */}
           <Grid item xs={12} md={6}>
             <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}>
               <Typography variant="h2" sx={{ fontWeight: 'bold' }}>
@@ -44,14 +43,13 @@ const Home = () => {
             </Box>
           </Grid>
 
-          {/* Image Section */}
           <Grid item xs={12} md={6}>
             <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', height: '100%' }}>
               <Box
                 component="img"
                 sx={{ width: '100%', alignSelf: 'flex-end' }}
                 alt="Descriptive alt text"
-                src="/vector.svg"
+                src="/kucert/vector.svg"
               />
             </Box>
           </Grid>

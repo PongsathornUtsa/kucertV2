@@ -147,7 +147,6 @@ const Drawers = ({ children }: { children: React.ReactNode }) => {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    {/* Home item */}
                     <ListItem disablePadding sx={{ display: 'block' }}>
                         <ListItemButton component={Link} to="/">
                             <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
@@ -157,7 +156,6 @@ const Drawers = ({ children }: { children: React.ReactNode }) => {
                         </ListItemButton>
                     </ListItem>
 
-                    {/* Dashboard item */}
                     <ListItem disablePadding sx={{ display: 'block' }}>
                         <ListItemButton component={Link} to="/dashboard">
                             <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
@@ -167,7 +165,6 @@ const Drawers = ({ children }: { children: React.ReactNode }) => {
                         </ListItemButton>
                     </ListItem>
 
-                    {/*Admin item */}
                     <ListItem disablePadding sx={{ display: 'block' }}>
                         <ListItemButton component={Link} to="/admin">
                             <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
@@ -177,7 +174,6 @@ const Drawers = ({ children }: { children: React.ReactNode }) => {
                         </ListItemButton>
                     </ListItem>
 
-                    {/*Service item */}
                     <ListItem disablePadding sx={{ display: 'block' }}>
                         <ListItemButton component={Link} to="/service">
                             <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>

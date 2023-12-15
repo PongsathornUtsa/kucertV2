@@ -8,7 +8,7 @@ import {
   useContractRead,
 } from "wagmi";
 
-import ContractInterface from "../../../../backend/abiFile.json";
+import ContractInterface from "../../abiFile.json";
 
 import FormDialog from './FormDialog';
 import { useSignMessage } from 'wagmi';
@@ -261,7 +261,7 @@ const Admin = () => {
   };
 
   const [recoveredAddress, setRecoveredAddress] = useState<string | undefined>();
-  const { data: signMessageData, isLoading: {/*loadingSign*/ }, signMessage, variables } = useSignMessage()
+  const { data: signMessageData, signMessage, variables } = useSignMessage()
   const [message, setMessage] = useState('');
 
   useEffect(() => {
@@ -326,8 +326,6 @@ const Admin = () => {
     <>
       <Box>
         <Grid container spacing={2} alignItems="stretch">
-
-          {/* First Grid Item */}
           <Grid item xs={12} md={4}>
             <Paper component="form" onSubmit={handleSubmitSearchTokenURI} sx={{ p: 2, mb: 2 }}>
               <Typography variant="h6" sx={{ fontWeight: 'bold', paddingBottom: '10pt' }}>Search TokenURI</Typography>
@@ -359,7 +357,6 @@ const Admin = () => {
                   required
                 >
                   <MenuItem value="University">University</MenuItem>
-                  {/* Add other roles as MenuItem if needed */}
                 </Select>
               </FormControl>
               <TextField
@@ -371,7 +368,6 @@ const Admin = () => {
                 required
                 sx={{ mb: 2 }}
               />
-              {/* Button Grid */}
               <Grid container spacing={2}>
                 <Grid item xs={3}>
                   <Button type="submit" onClick={() => handleButtonClick('grant')} variant="contained" fullWidth>Grant</Button>
@@ -385,7 +381,6 @@ const Admin = () => {
 
           </Grid>
 
-          {/* Second Grid Item */}
           <Grid item xs={12} md={4}>
             <Paper component="form" sx={{ p: 2, mb: 2 }}>
               <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>Enter a message to sign</Typography>
@@ -399,7 +394,7 @@ const Admin = () => {
                 required
                 sx={{ mb: 2 }}
               />
-              {/* Button Grid */}
+
               <Grid container spacing={2}>
                 <Grid item xs={3}>
                   <Button variant="contained" onClick={handleSignClick} fullWidth>Sign</Button>
@@ -440,7 +435,7 @@ const Admin = () => {
 
           </Grid>
 
-          {/* Third Grid Item */}
+
           <Grid item xs={12} md={4}>
             <Paper
               component="form"
@@ -504,7 +499,6 @@ const Admin = () => {
             </Paper>
           </Grid>
 
-          {/* Terminal Component */}
           <Grid item xs={12}>
             <Paper
               sx={{
