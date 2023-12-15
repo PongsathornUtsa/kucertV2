@@ -130,7 +130,7 @@ const Drawers = ({ children }: { children: React.ReactNode }) => {
                 <DrawerHeader>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
                         <img
-                            src="/ku_logo.png"
+                            src="/kucert/ku_logo.png"
                             alt="Kasetsart University Logo"
                             style={{ height: '38px', marginRight: '10px' }}
                         />
