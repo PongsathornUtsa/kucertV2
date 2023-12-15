@@ -7,14 +7,13 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 contract nftCert is ERC721URIStorage, AccessControl {
     uint256 public tokenCounter;
-
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
     bytes32 public constant UNIVERSITY_ROLE = keccak256("UNIVERSITY_ROLE");
 
-    mapping(uint256 => bytes) public certificateSignatures;
+    mapping(uint256 => string) public certificateSignatures;
 
     event CollectibleMinted(uint256 indexed tokenId, address indexed owner, string tokenURI);
-    event CertificateSignatureSet(uint256 indexed tokenId, bytes signature);
+    event CertificateSignatureSet(uint256 indexed tokenId, string signature);
 
     constructor() ERC721("KuCert", "KCRT") {
         tokenCounter = 1;
@@ -50,20 +49,18 @@ contract nftCert is ERC721URIStorage, AccessControl {
         _safeTransfer(from, to, tokenId, "");
     }
 
-    function setCertificateSignature(uint256 tokenId, bytes memory signature) public onlyRole(UNIVERSITY_ROLE) {
+    function setCertificateSignature(uint256 tokenId, string memory signature) public onlyRole(UNIVERSITY_ROLE) {
         require(ownerOf(tokenId) != address(0), "ERC721: nonexistent token"); 
         certificateSignatures[tokenId] = signature;
         emit CertificateSignatureSet(tokenId, signature);
     }
 
-    function getCertificateSignature(uint256 tokenId) public view returns (bytes memory) {
+    function getCertificateSignature(uint256 tokenId) public view returns (string memory) {
         require(ownerOf(tokenId) != address(0), "ERC721: nonexistent token");
-        require(_msgSender() == ownerOf(tokenId) || getApproved(tokenId) == _msgSender() || isApprovedForAll(ownerOf(tokenId), _msgSender()), "Caller is not the owner, approved, nor university");
         return certificateSignatures[tokenId];
     }
 
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721URIStorage, AccessControl) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
-
 }

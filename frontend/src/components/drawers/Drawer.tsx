@@ -15,6 +15,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
@@ -175,6 +176,17 @@ const Drawers = ({ children }: { children: React.ReactNode }) => {
                             <ListItemText primary="Admin Panel" sx={{ opacity: open ? 1 : 0 }} />
                         </ListItemButton>
                     </ListItem>
+
+                    {/*Service item */}
+                    <ListItem disablePadding sx={{ display: 'block' }}>
+                        <ListItemButton component={Link} to="/service">
+                            <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
+                                <VerifiedUserIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Service" sx={{ opacity: open ? 1 : 0 }} />
+                        </ListItemButton>
+                    </ListItem>
+
                 </List>
 
             </Drawer>

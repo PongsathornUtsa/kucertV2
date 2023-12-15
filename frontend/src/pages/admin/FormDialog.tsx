@@ -44,7 +44,7 @@ const FormDialog: React.FC<FormDialogProps> = ({ open, onClose }) => {
                 signer: formData.signer,
             },
         };
-        setPreviewData(JSON.stringify(previewFormat, null, 2));
+        setPreviewData(JSON.stringify(previewFormat));
     };
 
     const handleCopyToClipboard = async () => {
@@ -76,13 +76,13 @@ const FormDialog: React.FC<FormDialogProps> = ({ open, onClose }) => {
             <DialogTitle>Form Title</DialogTitle>
             <DialogContent>
                 <form onSubmit={handleSubmit}>
-                    <TextField label="Name" variant="outlined" name="name" value={formData.name} onChange={handleChange} fullWidth margin="normal"  />
-                    <TextField label="University Name" variant="outlined" name="universityName" value={formData.universityName} onChange={handleChange} fullWidth margin="normal"  />
-                    <TextField label="Student ID" variant="outlined" name="studentId" value={formData.studentId} onChange={handleChange} fullWidth margin="normal"  />
-                    <TextField label="Image" variant="outlined" name="image" value={formData.image} onChange={handleChange} fullWidth margin="normal"  />
+                    <TextField label="Name" variant="outlined" name="name" value={formData.name} onChange={handleChange} fullWidth margin="normal" />
+                    <TextField label="University Name" variant="outlined" name="universityName" value={formData.universityName} onChange={handleChange} fullWidth margin="normal" />
+                    <TextField label="Student ID" variant="outlined" name="studentId" value={formData.studentId} onChange={handleChange} fullWidth margin="normal" />
+                    <TextField label="Image" variant="outlined" name="image" value={formData.image} onChange={handleChange} fullWidth margin="normal" />
                     <Box sx={{ display: 'flex', gap: 2, marginTop: 2 }}>
-                        <TextField label="Issued Date" variant="outlined" name="issuedDate" type="date" value={formData.issuedDate} onChange={handleChange} InputLabelProps={{ shrink: true }} sx={{ flex: 1 }}  />
-                        <TextField label="Signer" variant="outlined" name="signer" value={formData.signer} onChange={handleChange} sx={{ flex: 1 }}  />
+                        <TextField label="Issued Date" variant="outlined" name="issuedDate" type="date" value={formData.issuedDate} onChange={handleChange} InputLabelProps={{ shrink: true }} sx={{ flex: 1 }} />
+                        <TextField label="Signer" variant="outlined" name="signer" value={formData.signer} onChange={handleChange} sx={{ flex: 1 }} />
                     </Box>
                     <DialogActions>
                         <Button onClick={handlePreview}>Preview</Button>
@@ -92,10 +92,11 @@ const FormDialog: React.FC<FormDialogProps> = ({ open, onClose }) => {
                 </form>
                 {previewData && (
                     <>
-                        <pre>{previewData}</pre>
+                        <pre style={{ maxHeight: '200px', overflow: 'auto' }}>{previewData}</pre>
                         <Button onClick={handleCopyToClipboard}>Copy Output</Button>
                     </>
                 )}
+
             </DialogContent>
         </Dialog>
     );

@@ -534,8 +534,6 @@ const Admin = () => {
             </Paper>
           </Grid>
 
-
-
         </Grid>
       </Box>
     </>

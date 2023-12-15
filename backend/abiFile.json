@@ -209,9 +209,9 @@
       },
       {
         "indexed": false,
-        "internalType": "bytes",
+        "internalType": "string",
         "name": "signature",
-        "type": "bytes"
+        "type": "string"
       }
     ],
     "name": "CertificateSignatureSet",
@@ -442,9 +442,9 @@
     "name": "certificateSignatures",
     "outputs": [
       {
-        "internalType": "bytes",
+        "internalType": "string",
         "name": "",
-        "type": "bytes"
+        "type": "string"
       }
     ],
     "stateMutability": "view",
@@ -480,9 +480,9 @@
     "name": "getCertificateSignature",
     "outputs": [
       {
-        "internalType": "bytes",
+        "internalType": "string",
         "name": "",
-        "type": "bytes"
+        "type": "string"
       }
     ],
     "stateMutability": "view",
@@ -737,9 +737,9 @@
         "type": "uint256"
       },
       {
-        "internalType": "bytes",
+        "internalType": "string",
         "name": "signature",
-        "type": "bytes"
+        "type": "string"
       }
     ],
     "name": "setCertificateSignature",
