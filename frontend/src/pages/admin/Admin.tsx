@@ -285,6 +285,7 @@ const Admin = () => {
     if (recoveredAddress) {
       console.log('Recovered Address:', recoveredAddress);
       appendOutput(`Recovered Address: ${recoveredAddress}`);
+      appendOutput(`Signature: ${signMessageData}`);
     }
   }, [recoveredAddress]);
 

@@ -1,5 +1,6 @@
 import { Box, Grid, Paper, Typography, TextField, Button } from '@mui/material';
 import { useState, useEffect, FormEvent } from 'react';
+import { verifyMessage ,Signature} from 'ethers';
 
 // From Smart Contract
 import {
@@ -76,6 +77,26 @@ const Service = () => {
         }
     }, [signature]);
 
+    // Verification
+    const [messageToVerify, setMessageToVerify] = useState("");
+    const [signatureToVerify, setSignatureToVerify] = useState("");
+
+    const handleSubmitVerify = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        try {
+            console.log(messageToVerify);
+            console.log(signatureToVerify);
+            const recoveredAddress = verifyMessage(messageToVerify, signatureToVerify);
+            console.log(recoveredAddress);
+            appendOutput(recoveredAddress);
+        } catch (error) {
+            console.error("Error verifying signature:", error);
+            appendOutput("Error verifying signature");
+        }
+    }
+    
+    
+
     return (
         <Box>
             <Grid container spacing={2} alignItems="stretch">
@@ -95,14 +116,16 @@ const Service = () => {
                         />
                         <Button type="submit" variant="contained">Search</Button>
                     </Paper>
-                    <Paper component="form" sx={{ p: 2, mb: 2 }}>
-                        <Typography variant="h6" sx={{ fontWeight: 'bold', paddingBottom: '10pt' }}>Verify a sign message</Typography>
+                    <Paper component="form" onSubmit={handleSubmitVerify} sx={{ p: 2, mb: 2 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 'bold', paddingBottom: '10pt' }}>Verify a signed message</Typography>
                         <TextField
                             label="Message"
                             multiline
                             variant="outlined"
                             fullWidth
                             required
+                            value={messageToVerify}
+                            onChange={(e) => setMessageToVerify(e.target.value)}
                             sx={{ mb: 2 }}
                         />
                         <TextField
@@ -111,6 +134,8 @@ const Service = () => {
                             variant="outlined"
                             fullWidth
                             required
+                            value={signatureToVerify}
+                            onChange={(e) => setSignatureToVerify(e.target.value)}
                             sx={{ mb: 2 }}
                         />
                         <Button type="submit" variant="contained">Search</Button>
